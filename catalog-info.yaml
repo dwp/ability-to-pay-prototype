@@ -2,7 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: ability.to.pay.prototype
-  title: Ability-To-Pay-Prototype
+  title: Ability-to-Pay-Prototype
   description: |
     A prototype to design and test the ATP service
 
