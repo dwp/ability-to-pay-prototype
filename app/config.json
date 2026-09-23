@@ -1,9 +1,9 @@
 {
-  "serviceName": "Service name goes here",
+  "serviceName": "Ability to Pay",
   "useServiceNavigation": true,
   "plugins": {
     "govuk-frontend": {
-      "rebrand": true
+      "rebrand": false
     }
   }
 }
