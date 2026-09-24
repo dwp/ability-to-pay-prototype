@@ -1,0 +1,68 @@
+{% extends "layouts/internal-service.html" %}
+
+{% block pageTitle %}
+Statement extracted - ATP 4.2
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {{ govukPanel({
+      titleText: "Statement extracted successfully"
+    }) }}
+
+    <h2 class="govuk-heading-m">
+      Statement details
+    </h2>
+
+    <dl class="govuk-summary-list">
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Statement ID
+        </dt>
+        <dd class="govuk-summary-list__value">
+          {{ statement.id }}
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Bank
+        </dt>
+        <dd class="govuk-summary-list__value">
+          {{ statement.bank }}
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Status
+        </dt>
+        <dd class="govuk-summary-list__value">
+          {{ statement.status }}
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Transactions
+        </dt>
+        <dd class="govuk-summary-list__value">
+          {{ statement.transactions.length }}
+        </dd>
+      </div>
+
+    </dl>
+
+    {{ govukButton({
+      text: "Review transactions",
+      href: "/review"
+    }) }}
+
+  </div>
+</div>
+
+{% endblock %}

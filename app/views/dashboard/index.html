@@ -1,28 +1,32 @@
 {% extends "layouts/internal-service.html" %}
 
-{% set pageName="Home" %}
+{% block pageTitle %}
+ATP 4.2
+{% endblock %}
 
 {% block content %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <!-- {% include "govuk-prototype-kit/includes/homepage-top.njk" %} -->
-
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
-      {{ serviceName }}
+    <h1 class="govuk-heading-l">
+      ATP 4.2
     </h1>
-    <span class="govuk-caption-xl govuk-!-margin-bottom-6">Prototype v4.2 </span>
 
-    <p class="govuk-!-margin-bottom-0">
-      <a href="#" role="button" draggable="false" class="govuk-button govuk-button--start" data-module="govuk-button">
-        Start now
-        <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19"
-          viewBox="0 0 33 40" aria-hidden="true" focusable="false">
-          <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
-        </svg>
-      </a>
+    <p class="govuk-body">
+      Upload bank statements for extraction and review.
     </p>
+
+    <p class="govuk-body">
+      You can review extracted transactions, make amendments,
+      remove transactions and download review outputs.
+    </p>
+
+    {{ govukButton({
+      text: "Start now",
+      href: "/upload",
+      isStartButton: true
+    }) }}
 
   </div>
 </div>

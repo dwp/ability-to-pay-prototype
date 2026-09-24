@@ -1,0 +1,52 @@
+{% extends "layouts/internal-service.html" %}
+
+{% block pageTitle %}
+Select bank - ATP 4.2
+{% endblock %}
+
+{% block beforeContent %}
+{{ govukBackLink({
+  text: "Back",
+  href: "/upload"
+}) }}
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    /bank
+
+      {{ govukRadios({
+        idPrefix: "bank",
+        name: "bank",
+        fieldset: {
+          legend: {
+            text: "Which bank statement are you uploading?",
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--l"
+          }
+        },
+        items: [
+          {
+            value: "HSBC",
+            text: "HSBC"
+          },
+          {
+            value: "Revolut",
+            text: "Revolut"
+          }
+        ]
+      }) }}
+
+      {{ govukButton({
+        text: "Continue"
+      }) }}
+
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}
