@@ -1,0 +1,59 @@
+{% extends "layouts/internal-service.html" %}
+
+{% block pageTitle %}
+Change transaction - ATP 4.2
+{% endblock %}
+
+{% block beforeContent %}
+<a
+  href="/review"
+  class="govuk-back-link">
+  Back
+</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-l">
+  Change transaction
+</h1>
+
+<p class="govuk-body">
+  Description: {{ transaction.description }}
+</p>
+
+<p class="govuk-body">
+  Date: {{ transaction.date }}
+</p>
+
+<form method="post">
+
+  <div class="govuk-form-group">
+    <label class="govuk-label" for="amount">
+      Amount
+    </label>
+
+    <input
+      class="govuk-input"
+      id="amount"
+      name="amount"
+      type="text"
+      value="{{ transaction.amount }}">
+  </div>
+
+  <button
+    type="submit"
+    class="govuk-button">
+    Continue
+  </button>
+
+</form>
+
+
+  </div>
+</div>
+
+{% endblock %}

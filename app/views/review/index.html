@@ -14,21 +14,52 @@ Review transactions - ATP 4.2
 {% block content %}
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-full">
 
     <h1 class="govuk-heading-l">
       Review transactions
     </h1>
 
-    {{ govukTable({
-      head: [
-        { text: "Date" },
-        { text: "Description" },
-        { text: "Amount" },
-        { text: "Action" }
-      ],
-      rows: rows
-    }) }}
+    <table class="govuk-table">
+
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">Date</th>
+          <th scope="col" class="govuk-table__header">Description</th>
+          <th scope="col" class="govuk-table__header">Amount</th>
+          <th scope="col" class="govuk-table__header">Action</th>
+        </tr>
+      </thead>
+
+      <tbody class="govuk-table__body">
+
+        {% for transaction in transactions %}
+
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell">
+            {{ transaction.date }}
+          </td>
+
+          <td class="govuk-table__cell">
+            {{ transaction.description }}
+          </td>
+
+          <td class="govuk-table__cell">
+            {{ transaction.amount }}
+          </td>
+
+          <td class="govuk-table__cell">
+            <a class="govuk-link" href="/review/change/{{ transaction.id }}">
+              Change
+            </a>
+          </td>
+        </tr>
+
+        {% endfor %}
+
+      </tbody>
+
+    </table>
 
   </div>
 </div>
