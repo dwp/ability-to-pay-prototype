@@ -1,0 +1,42 @@
+include:
+  - project: dwp/engineering/pipeline-solutions/gitlab/fragments/credential-check
+    ref: 2-3-1
+    file: ci-include-credential-check-base.yml
+  - project: dwp/engineering/pipeline-solutions/gitlab/fragments/fragment-version-check
+    ref: 2.4.0
+    file: ci-include-fragment-version-check-base.yml
+  - project: dwp/engineering/pipeline-solutions/gitlab/fragments/required-fragment-check
+    ref: 2.16.0
+    file: ci-include-required-fragment-check-base.yml
+  - project: dwp/engineering/pipeline-solutions/gitlab/fragments/update-semver
+    ref: 4.6.0
+    file: ci-include-update-semver-base.yml
+  - project: dwp/engineering/pipeline-solutions/gitlab/fragments/node-outdated
+    ref: 2.5.1
+    file: ci-include-node-outdated-base.yml
+  - project: dwp/engineering/pipeline-solutions/gitlab/fragments/gitleaks
+    ref: 3.1.4
+    file: ci-include-gitleaks-base.yml
+  - project: dwp/engineering/pipeline-solutions/gitlab/fragments/shell-check
+    ref: 3.1.5
+    file: ci-include-shell-check-base.yml
+  - project: dwp/engineering/pipeline-solutions/gitlab/fragments/todo-checker
+    ref: 2-1-4
+    file: ci-include-todo-checker-base.yml
+  - project: dwp/engineering/pipeline-solutions/gitlab/fragments/es-lint
+    ref: 4.0.0
+    file: ci-include-es-lint-base.yml
+  - project: dwp/engineering/pipeline-solutions/gitlab/fragments/sonarqube
+    ref: 4.3.3
+    file: ci-include-sonar-scanner-base.yml
+  - project: dwp/engineering/pipeline-solutions/gitlab/fragments/sast-container-check
+    ref: 2.11.1
+    file: ci-include-sast-container-check-base.yml
+
+  - project: dwp/engineering/pipeline-solutions/gitlab/functions
+    ref: 7.3.3
+    file: functions/base-mr.gitlab-ci.yml
+
+  - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/heroku-site-publish'
+    ref: 1-2-2
+    file: 'ci-include-heroku-site-publish.yml'

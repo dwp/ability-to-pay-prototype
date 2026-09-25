@@ -1,0 +1,31 @@
+fragment-version-check:
+  extends: .fragment-version-check-template
+required-fragment-check:
+  extends: .required-fragment-check-template
+gitleaks:
+  extends: .gitleaks-template
+shell-check:
+  extends: .shell-check-template
+todo-check:
+  extends: .todo-check-template
+lint-source:
+  extends: .lint-source-template
+docker-lint:
+  extends: .docker-lint-template
+node-outdated:
+  allow_failure: true
+  extends: .node-outdated-template
+docker-build:
+  extends: .docker-build-template
+trivy-container:
+  extends: .trivy-container-base
+sast-container:
+  extends: .sast-container-base
+sonar-scanner:
+  extends: .sonar-scanner-base
+node-audit:
+  extends: .node-audit-base
+node-audit-production:
+heroku-site-publish:
+  extends: .heroku-site-publish-template
+  

@@ -26,7 +26,5 @@ workflow:
       when: always
 
 include:
-  - project: dwp/engineering/pipeline-solutions/gitlab/functions
-    ref: 6.2.7
-    file:
-      - functions/base-mr.gitlab-ci.yml
+  - local: gitlab-ci/includes.yml
+  - local: gitlab-ci/jobs.yml
