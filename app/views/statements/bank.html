@@ -6,8 +6,9 @@ Select bank - ATP 4.2
 
 {% block beforeContent %}
 {{ govukBackLink({
-  text: "Back",
-  href: "/upload"
+text: "Back",
+classes:"govuk-!-margin-bottom-0",
+href: "/"
 }) }}
 {% endblock %}
 
@@ -16,34 +17,39 @@ Select bank - ATP 4.2
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    /bank
+    <form method="post">
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              Which bank statement are you uploading?
+            </h1>
+          </legend>
 
-      {{ govukRadios({
-        idPrefix: "bank",
-        name: "bank",
-        fieldset: {
-          legend: {
-            text: "Which bank statement are you uploading?",
-            isPageHeading: true,
-            classes: "govuk-fieldset__legend--l"
-          }
-        },
-        items: [
-          {
-            value: "HSBC",
-            text: "HSBC"
-          },
-          {
-            value: "Revolut",
-            text: "Revolut"
-          }
-        ]
-      }) }}
+          <div class="govuk-radios" data-module="govuk-radios">
 
-      {{ govukButton({
-        text: "Continue"
-      }) }}
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="bank-hsbc" name="bank" type="radio" value="HSBC">
+              <label class="govuk-label govuk-radios__label" for="bank-hsbc">
+                HSBC
+              </label>
+            </div>
 
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="bank-revolut" name="bank" type="radio" value="Revolut">
+              <label class="govuk-label govuk-radios__label" for="bank-revolut">
+                Revolut
+              </label>
+            </div>
+
+          </div>
+
+        </fieldset>
+
+        <button type="submit" class="govuk-button govuk-!-margin-top-4" data-module="govuk-button">
+          Continue
+        </button>
+      </div>
     </form>
 
   </div>

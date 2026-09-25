@@ -1,5 +1,4 @@
 function initialiseSession(req) {
-
   req.session.data.user ||= {
     id: 'ECM12345'
   }
@@ -9,7 +8,6 @@ function initialiseSession(req) {
   }
 
   req.session.data.audit ||= []
-
 }
 
 module.exports = {

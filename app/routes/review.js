@@ -1,24 +1,20 @@
-const express = require('express')
+module.exports = function (router) {
+  router.get('/review', (req, res) => {
+    const statements = req.session.data.case.statements
 
-const router = express.Router()
+    const statement = statements[statements.length - 1]
 
-router.get('/review', (req, res) => {
-  const statements = req.session.data.case.statements
+    const rows = statement.transactions.map(transaction => [
+      { text: transaction.date },
+      { text: transaction.description },
+      { text: transaction.amount },
+      {
+        html: '#Change</a>'
+      }
+    ])
 
-  const statement = statements[statements.length - 1]
-
-  const rows = statement.transactions.map(transaction => [
-    { text: transaction.date },
-    { text: transaction.description },
-    { text: transaction.amount },
-    {
-      html: '#Change</a>'
-    }
-  ])
-
-  res.render('review/index', {
-    rows
+    res.render('review/index', {
+      rows
+    })
   })
-})
-
-module.exports = router
+}

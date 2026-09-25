@@ -1,13 +1,14 @@
-const express = require('express')
+module.exports = function (router) {
+  router.get('/upload', (req, res) => {
+    res.render('upload/index')
+  })
 
-const router = express.Router()
+  router.post('/upload', (req, res) => {
+    req.session.data.upload ||= {}
 
-router.get('/upload', (req, res) => {
-  res.render('upload/index')
-})
+    req.session.data.upload.filename =
+      req.body.fileUpload1 || ''
 
-router.post('/upload', (req, res) => {
-  res.redirect('/bank')
-})
-
-module.exports = router
+    res.redirect('/bank')
+  })
+}
