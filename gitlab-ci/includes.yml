@@ -24,7 +24,7 @@ include:
     ref: 2-1-4
     file: ci-include-todo-checker-base.yml
   - project: dwp/engineering/pipeline-solutions/gitlab/fragments/es-lint
-    ref: 4.0.0
+    ref: 4.0.2
     file: ci-include-es-lint-base.yml
   - project: dwp/engineering/pipeline-solutions/gitlab/fragments/sonarqube
     ref: 4.3.3
