@@ -3,7 +3,7 @@ include:
     ref: 2.3.2
     file: ci-include-credential-check-base.yml
   - project: dwp/engineering/pipeline-solutions/gitlab/fragments/fragment-version-check
-    ref: 2.4.0
+    ref: 2.4.7
     file: ci-include-fragment-version-check-base.yml
   - project: dwp/engineering/pipeline-solutions/gitlab/fragments/required-fragment-check
     ref: 2.16.0
