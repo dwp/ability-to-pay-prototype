@@ -5,9 +5,7 @@ Change transaction - ATP 4.2
 {% endblock %}
 
 {% block beforeContent %}
-<a
-  href="/review"
-  class="govuk-back-link">
+<a href="/review" class="govuk-back-link">
   Back
 </a>
 {% endblock %}
@@ -17,40 +15,55 @@ Change transaction - ATP 4.2
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
+    {% if errors %}
+
+    {{ govukErrorSummary({
+    titleText: "There is a problem",
+    errorList: errors
+    }) }}
+
+    {% endif %}
+
+
     <h1 class="govuk-heading-l">
-  Change transaction
-</h1>
+      Change transaction
+    </h1>
 
-<p class="govuk-body">
-  Description: {{ transaction.description }}
-</p>
+    <p class="govuk-body">
+      Description: {{ transaction.description }}
+    </p>
 
-<p class="govuk-body">
-  Date: {{ transaction.date }}
-</p>
+    <p class="govuk-body">
+      Date: {{ transaction.date }}
+    </p>
 
-<form method="post">
+    <form method="post">
 
-  <div class="govuk-form-group">
-    <label class="govuk-label" for="amount">
-      Amount
-    </label>
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="amount">
+          Amount
+        </label>
 
-    <input
-      class="govuk-input"
-      id="amount"
-      name="amount"
-      type="text"
-      value="{{ transaction.amount }}">
-  </div>
+        <input class="govuk-input" id="amount" name="amount" type="text"
+          value="{{ enteredAmount or transaction.amount }}">
 
-  <button
-    type="submit"
-    class="govuk-button">
-    Continue
-  </button>
+      </div>
 
-</form>
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="reason">
+          Reason for change
+        </label>
+
+        <textarea class="govuk-textarea" id="reason" name="reason"
+          rows="5">{{ enteredReason or transaction.changeReason }}</textarea>
+
+      </div>
+
+      <button type="submit" class="govuk-button">
+        Continue
+      </button>
+
+    </form>
 
 
   </div>
