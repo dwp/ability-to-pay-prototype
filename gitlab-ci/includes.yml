@@ -12,7 +12,7 @@ include:
     ref: 4.6.0
     file: ci-include-update-semver-base.yml
   - project: dwp/engineering/pipeline-solutions/gitlab/fragments/node-outdated
-    ref: 2.5.1
+    ref: 2.5.3
     file: ci-include-node-outdated-base.yml
   - project: dwp/engineering/pipeline-solutions/gitlab/fragments/gitleaks
     ref: 3.1.4
