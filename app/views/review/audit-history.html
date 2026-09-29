@@ -1,0 +1,59 @@
+{% extends "layouts/internal-service.html" %}
+
+{% block pageTitle %}
+Audit history - ATP 4.2
+{% endblock %}
+
+{% block beforeContent %}
+<a href="/review" class="govuk-back-link">
+  Back
+</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+    <h1 class="govuk-heading-l">
+      Audit history
+    </h1>
+
+    <table class="govuk-table">
+
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th class="govuk-table__header">Timestamp</th>
+          <th class="govuk-table__header">User</th>
+          <th class="govuk-table__header">Action</th>
+          <th class="govuk-table__header">Transaction</th>
+          <th class="govuk-table__header">Old value</th>
+          <th class="govuk-table__header">New value</th>
+          <th class="govuk-table__header">Reason</th>
+        </tr>
+      </thead>
+
+      <tbody class="govuk-table__body">
+
+        {% for record in auditRecords %}
+
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell">{{ record.timestamp }}</td>
+          <td class="govuk-table__cell">{{ record.userId }}</td>
+          <td class="govuk-table__cell">{{ record.action }}</td>
+          <td class="govuk-table__cell">{{ record.transactionId }}</td>
+          <td class="govuk-table__cell">{{ record.oldAmount }}</td>
+          <td class="govuk-table__cell">{{ record.newAmount }}</td>
+          <td class="govuk-table__cell">{{ record.reason }}</td>
+        </tr>
+
+        {% endfor %}
+
+      </tbody>
+
+    </table>
+
+  </div>
+</div>
+
+{% endblock %}

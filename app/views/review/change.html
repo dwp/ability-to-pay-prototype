@@ -46,17 +46,6 @@ Change transaction - ATP 4.2
 
         <input class="govuk-input" id="amount" name="amount" type="text"
           value="{{ enteredAmount or transaction.amount }}">
-
-      </div>
-
-      <div class="govuk-form-group">
-        <label class="govuk-label" for="reason">
-          Reason for change
-        </label>
-
-        <textarea class="govuk-textarea" id="reason" name="reason"
-          rows="5">{{ enteredReason or transaction.changeReason }}</textarea>
-
       </div>
 
       <button type="submit" class="govuk-button">

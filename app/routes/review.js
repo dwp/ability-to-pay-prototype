@@ -34,12 +34,8 @@ module.exports = function (router) {
     const transaction = statement.transactions.find(
       transaction => transaction.id === req.params.transactionId
     )
-    if (!transaction) {
-      return res.redirect('/review')
-    }
 
     const amount = req.body.amount?.trim()
-    const reason = req.body.reason?.trim()
 
     const errors = []
 
@@ -50,38 +46,91 @@ module.exports = function (router) {
       })
     }
 
-    if (!reason) {
-      errors.push({
-        text: 'Enter a reason for the change',
-        href: '#reason'
-      })
-    }
-
     if (errors.length) {
       return res.render('review/change', {
         transaction,
         errors,
-        enteredAmount: amount,
-        enteredReason: reason
+        enteredAmount: amount
       })
     }
 
-    const oldAmount = transaction.amount
+    req.session.data.pendingChange = {
+      transactionId: transaction.id,
+      oldAmount: transaction.amount,
+      newAmount: amount
+    }
+
+    res.redirect(`/review/confirm-change`)
+  })
+
+  router.get('/review/confirm-change', (req, res) => {
+    if (!req.session.data.pendingChange) {
+      return res.redirect('/review')
+    }
+
+    res.render('review/confirm-change', {
+      pendingChange: req.session.data.pendingChange
+    })
+  })ß
+
+  router.post('/review/confirm-change', (req, res) => {
+
+    console.log('POST /review/confirm-change reached')
+
+    if (!req.session.data.pendingChange) {
+      return res.redirect('/review')
+    }
+
+    const reason = req.body.reason?.trim()
+
+    if (!reason) {
+      return res.render('review/confirm-change', {
+        pendingChange: req.session.data.pendingChange,
+        enteredReason: '',
+        errors: [
+          {
+            text: 'Enter a reason for the change',
+            href: '#reason'
+          }
+        ]
+      })
+    }
+
+    const statements = req.session.data.case.statements
+
+    const statement = statements[statements.length - 1]
+
+    const transaction = statement.transactions.find(
+      transaction =>
+        transaction.id === req.session.data.pendingChange.transactionId
+    )
+
+    transaction.amount =
+      req.session.data.pendingChange.newAmount
+
+    transaction.changeReason = reason
 
     req.session.data.audit.push({
       timestamp: new Date().toISOString(),
       userId: req.session.data.user.id,
       action: 'change',
       transactionId: transaction.id,
-      oldAmount,
-      newAmount: amount,
+      oldAmount: req.session.data.pendingChange.oldAmount,
+      newAmount: req.session.data.pendingChange.newAmount,
       reason
     })
 
-    transaction.amount = amount
-    transaction.changeReason = reason
+    delete req.session.data.pendingChange
 
     res.redirect('/review')
+  })
+
+  router.get('/review/audit-history', (req, res) => {
+    const auditRecords = req.session.data.audit || []
+
+    res.render('review/audit-history', {
+      auditRecords
+    })
   })
 
 }
