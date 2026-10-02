@@ -9,12 +9,13 @@
 
     <!-- {% include "govuk-prototype-kit/includes/homepage-top.njk" %} -->
 
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
+    <h1 class="govuk-heading-l govuk-!-margin-bottom-2">
       {{ serviceName }}
     </h1>
-    <span class="govuk-caption-xl govuk-!-margin-bottom-6">Prototype v4.2 </span>
+    <!-- <span class="govuk-caption-xl govuk-!-margin-bottom-6">Prototype v4.2 </span> -->
 
-    <p class="govuk-!-margin-bottom-0">
+    <p class="govuk-!-margin-top-6">
+      
       <a href="dashboard/index" role="button" draggable="false" class="govuk-button govuk-button--start" data-module="govuk-button">
         Start now
         <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19"
@@ -23,6 +24,29 @@
         </svg>
       </a>
     </p>
+
+    <div class="govuk-heading-s">Shortcuts</div>
+    <ul class="govuk-list govuk-list--bullet">
+<li>
+  <a class="govuk-link" href="upload">Upload a bank statement
+</a>
+</li><li>
+  <a class="govuk-link" href="/bank">Which bank statement are you uploading?</a>
+</li><li>
+  <a class="govuk-link" href="/statements/success">Extraction complete</a>
+</li>
+<li>
+  <a class="govuk-link" href="/review">Unreconciled transactions</a>
+</li>
+<li>
+  <a class="govuk-link" href="/review/item/issue-001">Review transaction 1</a>
+</li>
+<li>
+  <a class="govuk-link" href="/review/edit/txn-001">Change transaction data 1</a>
+</li>
+
+
+    </ul>
 
   </div>
 </div>

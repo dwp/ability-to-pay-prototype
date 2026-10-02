@@ -21,7 +21,9 @@ module.exports = function (router) {
     const statement = createMockStatement(bank)
 
     if (statement) {
-      req.session.data.case.statements.push(statement)
+      req.session.data.audit = []
+
+      req.session.data.case.statements = [statement]
     }
 
     res.redirect('/statements/success')
@@ -32,8 +34,25 @@ module.exports = function (router) {
 
     const statement = statements[statements.length - 1]
 
+    const reviewItems = statement.reviewItems || []
+
+    const reviewedCount = reviewItems.filter(
+      item => item.status === 'validated'
+    ).length
+
+    const lastAudit =
+      req.session.data.audit?.slice(-1)[0]
+
+    const uploadedFileName =
+      req.session.data.upload?.filename || 'Unknown'
+
     res.render('statements/success', {
-      statement
+      statement,
+      reviewItems,
+      reviewedCount,
+      lastAudit,
+      uploadedFileName
     })
   })
+
 }

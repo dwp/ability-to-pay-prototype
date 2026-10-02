@@ -1,5 +1,5 @@
 {
-  "serviceName": "Ability to Pay",
+  "serviceName": "Ability to Pay – Prototype 4.2",
   "useServiceNavigation": true,
   "plugins": {
     "govuk-frontend": {

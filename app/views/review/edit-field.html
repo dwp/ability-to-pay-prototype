@@ -1,0 +1,74 @@
+{% extends "layouts/internal-service.html" %}
+
+{% block pageTitle %}
+Change {{ field }} amount
+{% endblock %}
+
+{% block beforeContent %}
+<a onclick="history.back()" class="govuk-back-link">
+    Back
+</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        {% if errors %}
+
+        {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errors
+        }) }}
+
+        {% endif %}
+
+        <form method="post">
+
+            <h1 class="govuk-heading-l">
+                Change {{ field }} amount
+            </h1>
+
+            <p class="govuk-body">
+                You are changing the {{ field }} amount for
+                <strong>{{ transaction.description }}</strong>
+                on
+                <strong>{{ transaction.date }}</strong>.
+            </p>
+            <p class="govuk-body">
+                Current {{ field }} amount:
+                <strong>£{{ value }}</strong>
+            </p>
+
+            <div class="govuk-form-group">
+
+                <label class="govuk-label" for="value">
+                    Enter new amount
+                </label>
+
+                <div class="govuk-input__wrapper">
+
+                    <div class="govuk-input__prefix">
+                        £
+                    </div>
+
+                    <input class="govuk-input govuk-input--width-10" id="value" name="value" type="text"
+                        value="{{ value }}">
+
+                </div>
+
+            </div>
+
+            <button type="submit" class="govuk-button">
+
+                Save change
+
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

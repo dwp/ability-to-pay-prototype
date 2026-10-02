@@ -17,6 +17,7 @@ router.use((req, res, next) => {
 require('./routes/upload')(router)
 require('./routes/statements')(router)
 require('./routes/review')(router)
+require('./routes/downloads')(router)
 
 module.exports = router
 

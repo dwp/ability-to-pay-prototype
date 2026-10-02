@@ -26,36 +26,175 @@ Change transaction - ATP 4.2
 
 
     <h1 class="govuk-heading-l">
-      Change transaction
+      Change transaction data
     </h1>
 
-    <p class="govuk-body">
-      Description: {{ transaction.description }}
-    </p>
+    <dl class="govuk-summary-list">
 
-    <p class="govuk-body">
-      Date: {{ transaction.date }}
-    </p>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Date
+        </dt>
 
-    <form method="post">
-
-      <div class="govuk-form-group">
-        <label class="govuk-label" for="amount">
-          Amount
-        </label>
-
-        <input class="govuk-input" id="amount" name="amount" type="text"
-          value="{{ enteredAmount or transaction.amount }}">
+        <dd class="govuk-summary-list__value">
+          {{ transaction.date }}
+        </dd>
       </div>
 
-      <button type="submit" class="govuk-button">
-        Continue
-      </button>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Description
+        </dt>
 
-    </form>
+        <dd class="govuk-summary-list__value">
+          {{ transaction.description }}
+        </dd>
+      </div>
 
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Debit
+        </dt>
+
+        <dd class="govuk-summary-list__value">
+
+          {% if pendingTransactionChange.updatedValues.debit !=
+          pendingTransactionChange.originalValues.debit %}
+
+          <del>
+            £{{ pendingTransactionChange.originalValues.debit }}
+          </del>&nbsp;
+
+          <strong>
+            £{{ pendingTransactionChange.updatedValues.debit }}
+          </strong>
+
+          {% else %}
+
+          £{{ pendingTransactionChange.originalValues.debit }}
+
+          {% endif %}
+
+        </dd>
+
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/review/edit/{{ transaction.id }}/debit">
+            Change<span class="govuk-visually-hidden"> debit amount</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Credit
+        </dt>
+
+        <dd class="govuk-summary-list__value">
+
+          {% if pendingTransactionChange.updatedValues.credit !=
+          pendingTransactionChange.originalValues.credit %}
+
+          <del>
+            £{{ pendingTransactionChange.originalValues.credit }}
+          </del>&nbsp;
+
+          <strong>
+            £{{ pendingTransactionChange.updatedValues.credit }}
+          </strong>
+
+          {% else %}
+
+          £{{ pendingTransactionChange.originalValues.credit }}
+
+          {% endif %}
+
+        </dd>
+
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/review/edit/{{transaction.id }}/credit">
+            Change<span class="govuk-visually-hidden"> credit amount</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Balance
+        </dt>
+
+        <dd class="govuk-summary-list__value">
+
+          {% if pendingTransactionChange.updatedValues.balance !=
+          pendingTransactionChange.originalValues.balance %}
+
+          <del>
+            £{{ pendingTransactionChange.originalValues.balance }}
+          </del>&nbsp;
+
+          <strong>
+            £{{ pendingTransactionChange.updatedValues.balance }}
+          </strong>
+
+          {% else %}
+
+          £{{ pendingTransactionChange.originalValues.balance }}
+
+          {% endif %}
+
+        </dd>
+
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/review/edit/{{transaction.id}}/balance">
+            Change<span class="govuk-visually-hidden"> balance</span>
+          </a>
+        </dd>
+      </div>
+
+    </dl>
+
+    <form method="post" action="/review/edit-changes">
+
+<div class="govuk-form-group {% if errors and errors.length %}govuk-form-group--error{% endif %}">
+
+      <label class="govuk-label govuk-label--s" for="reason">
+
+        Reason for change
+
+      </label>
+
+      <div id="reason-hint" class="govuk-hint">
+        Explain why the transaction data needs to be amended.
+      </div>
+
+      {% if errors %}
+
+      <p id="reason-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span>
+        Enter a reason for the change
+      </p>
+
+      {% endif %}
+
+      <textarea class="govuk-textarea" id="reason" name="reason" rows="5"
+        aria-describedby="reason-hint">{{ enteredReason }}</textarea>
 
   </div>
+
+  <button type="submit" class="govuk-button" data-module="govuk-button">
+    Confirm and revalidate
+  </button>
+
+  </form>
+
+  <p class="govuk-body">
+    <a class="govuk-link" href="/review/remove/{{ transaction.id }}">
+      Remove transaction
+    </a>
+  </p>
+
+
+
+</div>
 </div>
 
 {% endblock %}

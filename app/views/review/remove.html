@@ -1,0 +1,66 @@
+{% extends "layouts/internal-service.html" %}
+
+{% block pageTitle %}
+Remove transaction - ATP 4.2
+{% endblock %}
+
+{% block beforeContent %}
+<a onclick="history.back()" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {% if errors %}
+
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errors
+      }) }}
+
+    {% endif %}
+
+    <form method="post">
+
+      <h1 class="govuk-heading-l">
+        Remove transaction
+      </h1>
+
+      <p class="govuk-body">
+        {{ transaction.description }}
+      </p>
+
+      <p class="govuk-body">
+        {{ transaction.amount }}
+      </p>
+
+      <div class="govuk-form-group {% if errors %}govuk-form-group--error{% endif %}">
+        <label class="govuk-label" for="reason">
+          Reason for removal
+        </label>
+
+        <textarea
+          class="govuk-textarea"
+          id="reason"
+          name="reason"
+          rows="5">{{ enteredReason }}</textarea>
+
+      </div>
+
+      <button
+        type="submit"
+        class="govuk-button"
+        data-module="govuk-button">
+
+        Confirm removal
+
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

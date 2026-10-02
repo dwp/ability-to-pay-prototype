@@ -1,0 +1,83 @@
+{% extends "layouts/internal-service.html" %}
+
+{% block pageTitle %}
+Review item - ATP 4.2
+{% endblock %}
+
+{% block beforeContent %}
+<a href="/review" class="govuk-back-link">
+  Back
+</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+    <h1 class="govuk-heading-l">
+      Review transaction {{ reviewNumber }}
+    </h1>
+
+    <div class="govuk-inset-text">
+      <p>Look in {{ reviewItem.hint }}.</p>
+      <p>Check against original statement and make necessary corrections below.</p>
+    </div>
+
+    <table class="govuk-table">
+
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th class="govuk-table__header">Date</th>
+          <th class="govuk-table__header">Description</th>
+          <th class="govuk-table__header">Debit</th>
+          <th class="govuk-table__header">Credit</th>
+          <th class="govuk-table__header">Balance</th>
+          <th class="govuk-table__header">Action</th>
+        </tr>
+      </thead>
+
+      <tbody class="govuk-table__body">
+
+        {% for transaction in transactions %}
+
+        <tr class="govuk-table__row">
+
+          <td class="govuk-table__cell">
+            {{ transaction.date }}
+          </td>
+
+          <td class="govuk-table__cell">
+            {{ transaction.description }}
+          </td>
+
+          <td class="govuk-table__cell">
+            {{ transaction.debit }}
+          </td>
+
+          <td class="govuk-table__cell">
+            {{ transaction.credit }}
+          </td>
+
+          <td class="govuk-table__cell">
+            {{ transaction.balance }}
+          </td>
+
+          <td class="govuk-table__cell">
+            <a class="govuk-link govuk-link--no-visited-state" href="/review/edit/{{ transaction.id }}">
+              Change
+            </a>
+          </td>
+
+        </tr>
+
+        {% endfor %}
+
+      </tbody>
+
+    </table>
+
+  </div>
+</div>
+
+{% endblock %}
