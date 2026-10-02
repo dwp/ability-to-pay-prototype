@@ -32,7 +32,11 @@ module.exports = function (router) {
   router.get('/statements/success', (req, res) => {
     const statements = req.session.data.case.statements
 
-    const statement = statements[statements.length - 1]
+    const statement = statements?.[statements.length - 1]
+
+    if (!statement) {
+      return res.redirect('/')
+    }
 
     const reviewItems = statement.reviewItems || []
 

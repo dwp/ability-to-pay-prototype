@@ -13,7 +13,6 @@ Review transactions - ATP 4.2
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-
     {% if statement.reviewStatus == 'completed' %}
 
     <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="review-complete-title" data-module="govuk-notification-banner">
@@ -59,7 +58,7 @@ Review transactions - ATP 4.2
         <div class="govuk-task-list__name-and-hint">
           <a class="govuk-link govuk-task-list__link" href="/review/item/{{ item.id }}"
             aria-describedby="transaction-review-{{ item.id }}-status">
-            Unreconciled transaction {{ item.displayNumber }}
+            Transaction {{ item.displayNumber }}
           </a>
           <div id="transaction-review-{{ item.id }}-hint" class="govuk-task-list__hint">
             {{ item.hint }}
@@ -79,9 +78,6 @@ Review transactions - ATP 4.2
       </li>
       {% endfor %}
     </ul>
-
-
-
 
   </div>
 </div>

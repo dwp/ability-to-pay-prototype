@@ -1,3 +1,7 @@
+function escapeCsv(value) {
+  return `"${String(value ?? '').replace(/"/g, '""')}"`
+}
+
 module.exports = function (router) {
 
   router.get('/downloads/extracted-data', (req, res) => {
@@ -14,16 +18,20 @@ module.exports = function (router) {
         'Transaction ID',
         'Date',
         'Description',
-        'Amount'
+        'Debit',
+        'Credit',
+        'Balance'
       ].join(',')
     ]
 
     transactions.forEach(transaction => {
       rows.push([
-        transaction.id,
-        transaction.date,
-        transaction.description,
-        transaction.amount
+        escapeCsv(transaction.id),
+        escapeCsv(transaction.date),
+        escapeCsv(transaction.description),
+        escapeCsv(transaction.debit),
+        escapeCsv(transaction.credit),
+        escapeCsv(transaction.balance)
       ].join(','))
     })
 
@@ -47,23 +55,33 @@ module.exports = function (router) {
         'User ID',
         'Action',
         'Transaction ID',
-        'Old Amount',
-        'New Amount',
-        'Amount',
+        'Original Debit',
+        'Updated Debit',
+        'Original Credit',
+        'Updated Credit',
+        'Original Balance',
+        'Updated Balance',
         'Reason'
       ].join(',')
     ]
 
     auditRecords.forEach(record => {
       rows.push([
-        record.timestamp || '',
-        record.userId || '',
-        record.action || '',
-        record.transactionId || '',
-        record.oldAmount || '',
-        record.newAmount || '',
-        record.amount || '',
-        `"${record.reason || ''}"`
+        escapeCsv(record.timestamp),
+        escapeCsv(record.userId),
+        escapeCsv(record.action),
+        escapeCsv(record.transactionId),
+
+        escapeCsv(record.originalValues?.debit),
+        escapeCsv(record.updatedValues?.debit),
+
+        escapeCsv(record.originalValues?.credit),
+        escapeCsv(record.updatedValues?.credit),
+
+        escapeCsv(record.originalValues?.balance),
+        escapeCsv(record.updatedValues?.balance),
+
+        escapeCsv(record.reason)
       ].join(','))
     })
 

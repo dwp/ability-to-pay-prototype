@@ -152,7 +152,7 @@ Change transaction - ATP 4.2
 
     </dl>
 
-    <form method="post" action="/review/edit-changes">
+    <form method="post" action="/review/review-changes">
 
 <div class="govuk-form-group {% if errors and errors.length %}govuk-form-group--error{% endif %}">
 
@@ -183,6 +183,14 @@ Change transaction - ATP 4.2
   <button type="submit" class="govuk-button" data-module="govuk-button">
     Confirm and revalidate
   </button>
+      {% if errors %}
+
+      <p id="reason-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span>
+        Enter a reason for the change
+      </p>
+
+      {% endif %}
 
   </form>
 
@@ -194,6 +202,8 @@ Change transaction - ATP 4.2
 
 
 
+
+</div>
 </div>
 </div>
 

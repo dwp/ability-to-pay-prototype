@@ -26,7 +26,7 @@ module.exports = function (router) {
     })
   })
 
-  router.get('/review/change/:transactionId', (req, res) => {
+  router.get('/review/edit/:transactionId/:field', (req, res) => {
     const statements = req.session.data.case.statements
 
     const statement = statements[statements.length - 1]
@@ -35,12 +35,30 @@ module.exports = function (router) {
       transaction => transaction.id === req.params.transactionId
     )
 
-    res.render('review/change', {
-      transaction
+    if (!transaction) {
+      return res.redirect('/review')
+    }
+
+    const allowedFields = [
+      'debit',
+      'credit',
+      'balance'
+    ]
+
+    const field = req.params.field
+
+    if (!allowedFields.includes(field)) {
+      return res.redirect('/review')
+    }
+
+    res.render('review/edit-field', {
+      transaction,
+      field,
+      value: transaction[field]
     })
   })
 
-  router.post('/review/change/:transactionId', (req, res) => {
+  router.post('/review/edit/:transactionId/:field', (req, res) => {
     const statements = req.session.data.case.statements
 
     const statement = statements[statements.length - 1]
@@ -49,103 +67,123 @@ module.exports = function (router) {
       transaction => transaction.id === req.params.transactionId
     )
 
-    const amount = req.body.amount?.trim()
+    if (!transaction) {
+      return res.redirect('/review')
+    }
+
+    const allowedFields = [
+      'debit',
+      'credit',
+      'balance'
+    ]
+
+    const field = req.params.field
+
+    if (!allowedFields.includes(field)) {
+      return res.redirect('/review')
+    }
+
+    const value = req.body.value?.trim()
 
     const errors = []
 
-    if (!amount) {
+    if (!value) {
       errors.push({
-        text: 'Enter an amount',
-        href: '#amount'
+        text: `Enter a ${field} amount`,
+        href: '#value'
       })
-    }
 
-    if (errors.length) {
-      return res.render('review/change', {
+      return res.render('review/edit-field', {
         transaction,
-        errors,
-        enteredAmount: amount
+        field,
+        value,
+        errors
       })
     }
 
-    req.session.data.pendingChange = {
-      transactionId: transaction.id,
-      oldAmount: transaction.amount,
-      newAmount: amount
+    if (!req.session.data.pendingTransactionChange) {
+      req.session.data.pendingTransactionChange = {
+        transactionId: transaction.id,
+
+        originalValues: {
+          debit: transaction.debit,
+          credit: transaction.credit,
+          balance: transaction.balance
+        },
+
+        updatedValues: {
+          debit: transaction.debit,
+          credit: transaction.credit,
+          balance: transaction.balance
+        }
+      }
     }
 
-    res.redirect(`/review/confirm-change`)
+    req.session.data.pendingTransactionChange.updatedValues[field] =
+      value
+
+    res.redirect('/review/edit')
   })
 
-  router.get('/review/confirm-change', (req, res) => {
-    if (!req.session.data.pendingChange) {
-      return res.redirect('/review')
-    }
-
-    res.render('review/confirm-change', {
-      pendingChange: req.session.data.pendingChange
-    })
-  })
-
-  router.post('/review/confirm-change', (req, res) => {
-
-    if (!req.session.data.pendingChange) {
-      return res.redirect('/review')
-    }
-
-    const reason = req.body.reason?.trim()
-
-    if (!reason) {
-      return res.render('review/confirm-change', {
-        pendingChange: req.session.data.pendingChange,
-        enteredReason: '',
-        errors: [
-          {
-            text: 'Enter a reason for the change',
-            href: '#reason'
-          }
-        ]
-      })
-    }
-
+  router.get('/review/start-edit/:transactionId', (req, res) => {
     const statements = req.session.data.case.statements
 
     const statement = statements[statements.length - 1]
 
     const transaction = statement.transactions.find(
-      transaction =>
-        transaction.id === req.session.data.pendingChange.transactionId
+      transaction => transaction.id === req.params.transactionId
     )
 
-    transaction.amount =
-      req.session.data.pendingChange.newAmount
-
-    transaction.changeReason = reason
-
-    req.session.data.audit.push({
-      timestamp: new Date().toISOString(),
-      userId: req.session.data.user.id,
-      action: 'change',
-      transactionId: transaction.id,
-      oldAmount: req.session.data.pendingChange.oldAmount,
-      newAmount: req.session.data.pendingChange.newAmount,
-      reason
-    })
-
-    const reviewItem = statement.reviewItems.find(
-      item =>
-        item.transactionIds.includes(transaction.id)
-    )
-
-    if (reviewItem) {
-      reviewItem.status = 'validated'
+    if (!transaction) {
+      return res.redirect('/review')
     }
 
-    updateReviewStatus(statement)
+    req.session.data.pendingTransactionChange = {
+      transactionId: transaction.id,
 
-    delete req.session.data.pendingChange
+      originalValues: {
+        debit: transaction.debit,
+        credit: transaction.credit,
+        balance: transaction.balance
+      },
 
-    res.redirect('/review')
+      updatedValues: {
+        debit: transaction.debit,
+        credit: transaction.credit,
+        balance: transaction.balance
+      }
+    }
+
+    res.redirect('/review/edit')
+  })
+
+  router.get('/review/edit', (req, res) => {
+    const statements = req.session.data.case.statements
+
+    const statement = statements[statements.length - 1]
+
+    const pendingTransactionChange =
+      req.session.data.pendingTransactionChange
+
+    if (!pendingTransactionChange) {
+      return res.redirect('/review')
+    }
+
+    const transaction = statement.transactions.find(
+      transaction =>
+        transaction.id === pendingTransactionChange.transactionId
+    )
+
+    if (!transaction) {
+      return res.redirect('/review')
+    }
+
+    res.render('review/change', {
+      transaction,
+      pendingTransactionChange,
+      enteredReason:
+        pendingTransactionChange.reason || ''
+    })
   })
 
   router.get('/review/audit-history', (req, res) => {
@@ -384,67 +422,80 @@ module.exports = function (router) {
     })
   })
 
-  router.post('/review/edit/:transactionId/review-changes', (req, res) => {
-    const statements = req.session.data.case.statements
+  router.post('/review/review-changes', (req, res) => {
+  const statements = req.session.data.case.statements
 
-    const statement = statements[statements.length - 1]
+  const statement = statements[statements.length - 1]
 
-    const transaction = statement.transactions.find(
-      transaction => transaction.id === req.params.transactionId
-    )
+  const pendingTransactionChange =
+    req.session.data.pendingTransactionChange
 
-    if (!transaction) {
-      return res.redirect('/review')
-    }
+  if (!pendingTransactionChange) {
+    return res.redirect('/review')
+  }
 
-    const reason = req.body.reason?.trim()
+  const transaction = statement.transactions.find(
+    transaction =>
+      transaction.id === pendingTransactionChange.transactionId
+  )
 
-    if (!reason) {
-      return res.render('review/change', {
-        transaction,
-        pendingTransactionChange:
-          req.session.data.pendingTransactionChange,
-        enteredReason: '',
-        errors: [
-          {
-            text: 'Enter a reason for the change',
-            href: '#reason'
-          }
-        ]
-      })
-    }
+  if (!transaction) {
+    return res.redirect('/review')
+  }
 
-    req.session.data.pendingTransactionChange.reason =
-      reason
+  const reason = req.body.reason?.trim()
 
-    res.redirect('/review/review-changes')
-  })
-
-  router.get('/review/review-changes', (req, res) => {
-    const statements = req.session.data.case.statements
-
-    const statement = statements[statements.length - 1]
-
-    const pendingTransactionChange =
-      req.session.data.pendingTransactionChange
-
-    if (!pendingTransactionChange) {
-      return res.redirect('/review')
-    }
-
-    const transaction = statement.transactions.find(
-      transaction =>
-        transaction.id === pendingTransactionChange.transactionId
-    )
-
-    if (!transaction) {
-      return res.redirect('/review')
-    }
-
-    res.render('review/review-changes', {
+  if (!reason) {
+    return res.render('review/change', {
       transaction,
-      pendingTransactionChange
+      pendingTransactionChange,
+      enteredReason: '',
+      errors: [
+        {
+          text: 'Enter a reason for the change',
+          href: '#reason'
+        }
+      ]
     })
+  }
+
+  transaction.debit =
+    pendingTransactionChange.updatedValues.debit
+
+  transaction.credit =
+    pendingTransactionChange.updatedValues.credit
+
+  transaction.balance =
+    pendingTransactionChange.updatedValues.balance
+
+  req.session.data.audit.push({
+    timestamp: new Date().toISOString(),
+    userId: req.session.data.user.id,
+    action: 'change',
+    transactionId: transaction.id,
+    originalValues:
+      pendingTransactionChange.originalValues,
+    updatedValues:
+      pendingTransactionChange.updatedValues,
+    reason
   })
+
+  const reviewItem = statement.reviewItems.find(
+    item =>
+      item.transactionIds.includes(transaction.id)
+  )
+
+  if (reviewItem) {
+    reviewItem.status = 'validated'
+  }
+
+  updateReviewStatus(statement)
+
+  delete req.session.data.pendingTransactionChange
+
+  res.redirect('/review')
+})
+
+  
 
 }
