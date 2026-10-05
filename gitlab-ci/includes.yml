@@ -30,7 +30,7 @@ include:
     ref: 4.3.3
     file: ci-include-sonar-scanner-base.yml
   - project: dwp/engineering/pipeline-solutions/gitlab/fragments/sast-container-check
-    ref: 2.11.1
+    ref: 2.11.3
     file: ci-include-sast-container-check-base.yml
 
   - project: dwp/engineering/pipeline-solutions/gitlab/functions
