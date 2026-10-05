@@ -40,6 +40,8 @@ module.exports = function (router) {
 
     const reviewItems = statement.reviewItems || []
 
+    const hasReviewItems = reviewItems.length > 0
+
     const reviewedCount = reviewItems.filter(
       item => item.status === 'validated'
     ).length
@@ -48,11 +50,15 @@ module.exports = function (router) {
       req.session.data.audit?.slice(-1)[0]
 
     const uploadedFileName =
-      req.session.data.upload?.filename || 'Unknown'
+      req.session.data.upload?.filename ||
+      (statement.bank
+        ? `${statement.bank.toLowerCase()}_statement.pdf`
+        : 'bank_statement.pdf')
 
     res.render('statements/success', {
       statement,
       reviewItems,
+      hasReviewItems,
       reviewedCount,
       lastAudit,
       uploadedFileName

@@ -9,6 +9,7 @@ Statement extracted - ATP 4.2
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
+    {% if hasReviewItems %}
     <div class="govuk-panel govuk-panel--confirmation">
       <h1 class="govuk-panel__title">
         Extraction complete
@@ -18,6 +19,19 @@ Statement extracted - ATP 4.2
         {{ reviewItems.length }} transactions require review<br>
       </div>
     </div>
+
+    {% else %}
+    <div class="govuk-panel govuk-panel--confirmation">
+      <h1 class="govuk-panel__title">
+        Extraction complete
+      </h1>
+
+      <div class="govuk-panel__body">
+        Ready to download<br>
+      </div>
+    </div>
+
+    {% endif %}
 
     <dl class="govuk-summary-list">
 
@@ -30,52 +44,77 @@ Statement extracted - ATP 4.2
         </dd>
       </div>
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Transactions extracted
-        </dt>
-        <dd class="govuk-summary-list__value">
-          {{ statement.transactions.length }}
-        </dd>
-      </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Pages extracted
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ statement.pageCount }}
+    </dd>
+  </div>
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Flagged for review
-        </dt>
-        <dd class="govuk-summary-list__value">
-          {{ reviewItems.length }} unreconciled transaction{% if reviewItems.length != 1 %}s{% endif %}
-        </dd>
-      </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Transactions extracted
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ statement.transactionCount }}
+    </dd>
+  </div>
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Transactions reviewed
-        </dt>
-        <dd class="govuk-summary-list__value">
-          {{ reviewedCount }} of {{ reviewItems.length }}
-        </dd>
-      </div>
+  {% if hasReviewItems %}
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Last review action
-        </dt>
-        <dd class="govuk-summary-list__value">
-          {% if lastAudit %}
-          {{ lastAudit.action }}
-          {% else %}
-          None
-          {% endif %}
-        </dd>
-      </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Flagged for review
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ reviewItems.length }} unreconciled transaction{% if reviewItems.length != 1 %}s{% endif %}
+    </dd>
+  </div>
 
-    </dl>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Transactions reviewed
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ reviewedCount }} of {{ reviewItems.length }}
+    </dd>
+  </div>
+
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Last review action
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {% if lastAudit %}
+        {{ lastAudit.action }}
+      {% else %}
+        None
+      {% endif %}
+    </dd>
+  </div>
+
+  {% endif %}
+
+</dl>
+
+
+    {% if hasReviewItems %}
 
     {{ govukButton({
     text: "Review transactions",
     href: "/review"
     }) }}
+
+    {% else %}
+
+    <p class="govuk-body">
+      <a class="govuk-link" href="/downloads/extracted-data">Download reviewed data
+      </a>
+    </p>
+
+    {% endif %}
 
   </div>
 </div>

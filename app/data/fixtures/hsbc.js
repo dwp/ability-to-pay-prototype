@@ -2,12 +2,14 @@ module.exports = {
   id: 'stmt-001',
   bank: 'HSBC',
   status: 'extracted',
+  pageCount: 11,
+  transactionCount: 213,
   reviewStatus: 'in-progress',
   reviewItems: [
     {
       id: 'issue-001',
       title: 'Transaction 1',
-      hint: 'Monzo.pdf, page 5, rows 7 to 12',
+      hint: 'HSBC_Statement_April_2026.pdf, page 5, rows 7 to 12',
       status: 'needs-review',
       transactionIds: [
         'txn-001',
@@ -18,7 +20,7 @@ module.exports = {
     {
       id: 'issue-002',
       title: 'Transaction 2',
-      hint: 'Monzo.pdf, page 11, rows 2 to 5',
+      hint: 'HSBC_Statement_April_2026.pdf, page 11, rows 2 to 5',
       status: 'needs-review',
       transactionIds: [
         'txn-004',

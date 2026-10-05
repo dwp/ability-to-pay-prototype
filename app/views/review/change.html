@@ -52,32 +52,42 @@ Change transaction - ATP 4.2
       </div>
 
       <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
+        <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
           Debit
         </dt>
 
-        <dd class="govuk-summary-list__value">
+        <dd class="govuk-summary-list__value govuk-!-width-one-half">
 
-          {% if pendingTransactionChange.updatedValues.debit !=
-          pendingTransactionChange.originalValues.debit %}
+          {% if pendingTransactionChange.originalValues.debit !=
+          pendingTransactionChange.updatedValues.debit %}
 
-          <del>
+            {% if pendingTransactionChange.originalValues.debit %}
+            <del>
+              £{{ pendingTransactionChange.originalValues.debit }}
+            </del>
+            {% else %}
+            &mdash;
+            {% endif %}
+
+              {% if pendingTransactionChange.updatedValues.debit %}
+              <strong>£{{ pendingTransactionChange.updatedValues.debit }}</strong>
+              {% else %}
+              &mdash;
+              {% endif %}
+
+            {% else %}
+
+            {% if pendingTransactionChange.originalValues.debit %}
             £{{ pendingTransactionChange.originalValues.debit }}
-          </del>&nbsp;
-
-          <strong>
-            £{{ pendingTransactionChange.updatedValues.debit }}
-          </strong>
-
-          {% else %}
-
-          £{{ pendingTransactionChange.originalValues.debit }}
+            {% else %}
+            &mdash;
+            {% endif %}
 
           {% endif %}
 
         </dd>
 
-        <dd class="govuk-summary-list__actions">
+        <dd class="govuk-summary-list__actions govuk-!-width-one-quarter">
           <a class="govuk-link" href="/review/edit/{{ transaction.id }}/debit">
             Change<span class="govuk-visually-hidden"> debit amount</span>
           </a>
@@ -85,26 +95,38 @@ Change transaction - ATP 4.2
       </div>
 
       <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
+        <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
           Credit
         </dt>
 
-        <dd class="govuk-summary-list__value">
+        <dd class="govuk-summary-list__value govuk-!-width-one-half">
 
-          {% if pendingTransactionChange.updatedValues.credit !=
-          pendingTransactionChange.originalValues.credit %}
+          {% if pendingTransactionChange.originalValues.credit !=
+          pendingTransactionChange.updatedValues.credit %}
 
-          <del>
-            £{{ pendingTransactionChange.originalValues.credit }}
-          </del>&nbsp;
+            {% if pendingTransactionChange.originalValues.credit %}
+            <del>
+              £{{ pendingTransactionChange.originalValues.credit }}
+            </del>
+            {% else %}
+            &mdash;
+            {% endif %}
 
-          <strong>
-            £{{ pendingTransactionChange.updatedValues.credit }}
-          </strong>
+            
+              {% if pendingTransactionChange.updatedValues.credit %}
+              <strong>£{{ pendingTransactionChange.updatedValues.credit }} </strong>
+              {% else %}
+              &mdash;
+              {% endif %}
+           
 
           {% else %}
 
-          £{{ pendingTransactionChange.originalValues.credit }}
+            {% if pendingTransactionChange.originalValues.credit %}
+              £{{ pendingTransactionChange.originalValues.credit }}
+            {% else %}
+              &mdash;
+            {% endif %}
 
           {% endif %}
 
@@ -118,32 +140,43 @@ Change transaction - ATP 4.2
       </div>
 
       <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
+        <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
           Balance
         </dt>
 
-        <dd class="govuk-summary-list__value">
 
-          {% if pendingTransactionChange.updatedValues.balance !=
-          pendingTransactionChange.originalValues.balance %}
+        <dd class="govuk-summary-list__value govuk-!-width-one-half">
 
-          <del>
-            £{{ pendingTransactionChange.originalValues.balance }}
-          </del>&nbsp;
+          {% if pendingTransactionChange.originalValues.balance !=
+          pendingTransactionChange.updatedValues.balance %}
 
-          <strong>
-            £{{ pendingTransactionChange.updatedValues.balance }}
-          </strong>
+            {% if pendingTransactionChange.originalValues.balance %}
+            <del>
+              £{{ pendingTransactionChange.originalValues.balance }}
+            </del>
+            {% else %}
+            &mdash;
+            {% endif %}
+
+            {% if pendingTransactionChange.updatedValues.balance %}
+            <strong>£{{ pendingTransactionChange.updatedValues.balance }}</strong>
+            {% else %}
+            &mdash;
+            {% endif %}
 
           {% else %}
 
-          £{{ pendingTransactionChange.originalValues.balance }}
+            {% if pendingTransactionChange.originalValues.balance %}
+            £{{ pendingTransactionChange.originalValues.balance }}
+            {% else %}
+            &mdash;
+            {% endif %}
 
           {% endif %}
 
         </dd>
 
-        <dd class="govuk-summary-list__actions">
+        <dd class="govuk-summary-list__actions govuk-!-width-one-quarter">
           <a class="govuk-link" href="/review/edit/{{transaction.id}}/balance">
             Change<span class="govuk-visually-hidden"> balance</span>
           </a>
@@ -154,18 +187,43 @@ Change transaction - ATP 4.2
 
     <form method="post" action="/review/review-changes">
 
-<div class="govuk-form-group {% if errors and errors.length %}govuk-form-group--error{% endif %}">
+      {% set hasChanges =
+      pendingTransactionChange.originalValues.debit != pendingTransactionChange.updatedValues.debit
+      or pendingTransactionChange.originalValues.credit != pendingTransactionChange.updatedValues.credit
+      or pendingTransactionChange.originalValues.balance != pendingTransactionChange.updatedValues.balance
+      %}
 
-      <label class="govuk-label govuk-label--s" for="reason">
+      {% if hasChanges %}
 
-        Reason for change
+      <div class="govuk-form-group {% if errors and errors.length %}govuk-form-group--error{% endif %}">
 
-      </label>
+        <label class="govuk-label govuk-label--s" for="reason">
 
-      <div id="reason-hint" class="govuk-hint">
-        Explain why the transaction data needs to be amended.
+          Reason for change
+
+        </label>
+
+        <div id="reason-hint" class="govuk-hint">
+          Explain why the transaction data needs to be amended.
+        </div>
+
+        {% if errors %}
+
+        <p id="reason-error" class="govuk-error-message">
+          <span class="govuk-visually-hidden">Error:</span>
+          Enter a reason for the change
+        </p>
+
+        {% endif %}
+
+        <textarea class="govuk-textarea" id="reason" name="reason" rows="5"
+          aria-describedby="reason-hint">{{ enteredReason }}</textarea>
+
       </div>
 
+      <button type="submit" class="govuk-button" data-module="govuk-button">
+        Confirm and revalidate
+      </button>
       {% if errors %}
 
       <p id="reason-error" class="govuk-error-message">
@@ -175,35 +233,17 @@ Change transaction - ATP 4.2
 
       {% endif %}
 
-      <textarea class="govuk-textarea" id="reason" name="reason" rows="5"
-        aria-describedby="reason-hint">{{ enteredReason }}</textarea>
+    </form>
+
+    <p class="govuk-body">
+      <a class="govuk-link" href="/review/remove/{{ transaction.id }}">
+        Remove transaction
+      </a>
+    </p>
 
   </div>
+  {% endif %}
 
-  <button type="submit" class="govuk-button" data-module="govuk-button">
-    Confirm and revalidate
-  </button>
-      {% if errors %}
-
-      <p id="reason-error" class="govuk-error-message">
-        <span class="govuk-visually-hidden">Error:</span>
-        Enter a reason for the change
-      </p>
-
-      {% endif %}
-
-  </form>
-
-  <p class="govuk-body">
-    <a class="govuk-link" href="/review/remove/{{ transaction.id }}">
-      Remove transaction
-    </a>
-  </p>
-
-
-
-
-</div>
 </div>
 </div>
 
