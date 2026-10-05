@@ -21,7 +21,7 @@ include:
     ref: 3.1.5
     file: ci-include-shell-check-base.yml
   - project: dwp/engineering/pipeline-solutions/gitlab/fragments/todo-checker
-    ref: 2-1-4
+    ref: 2.1.5
     file: ci-include-todo-checker-base.yml
   - project: dwp/engineering/pipeline-solutions/gitlab/fragments/es-lint
     ref: 4.0.2
