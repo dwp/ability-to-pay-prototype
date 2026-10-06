@@ -4,7 +4,7 @@ module.exports = {
     status: 'extracted',
     pageCount: 7,
     transactionCount: 143,
-    reviewStatus: 'complete',
+    reviewStatus: 'completed',
 
     reviewItems: [],
 

@@ -1,0 +1,32 @@
+{% extends "layouts/internal-service.html" %}
+
+{% block pageTitle %}
+Download audit history - ATP 4.2
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-l">
+      Download audit history
+    </h1>
+
+    <p class="govuk-body">
+      Changes were made during review.
+    </p>
+
+    <p class="govuk-body">
+      You must download the audit history before downloading the reviewed data.
+    </p>
+
+    {{ govukButton({
+      text: "Download audit history",
+      href: "/downloads/audit-history"
+    }) }}
+
+  </div>
+</div>
+
+{% endblock %}

@@ -5,7 +5,7 @@ Audit history - ATP 4.2
 {% endblock %}
 
 {% block beforeContent %}
-<a href="/review" class="govuk-back-link">
+<a href="history.back()" class="govuk-back-link">
   Back
 </a>
 {% endblock %}
@@ -36,7 +36,7 @@ Audit history - ATP 4.2
               Timestamp
             </dt>
             <dd class="govuk-summary-list__value">
-              {{ record.timestamp }}
+             {{ record.formattedTimestamp }}
             </dd>
           </div>
 

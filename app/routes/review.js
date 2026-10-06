@@ -19,42 +19,17 @@ module.exports = function (router) {
     const hasAuditRecords =
       (req.session.data.audit || []).length > 0
 
+    const uploadedFileName =
+      req.session.data.upload?.filename ||
+      (statement.bank
+        ? `${statement.bank.toLowerCase()}_statement.pdf`
+        : 'bank_statement.pdf')
+
     res.render('review/index', {
       statement,
       reviewItems,
-      hasAuditRecords
-    })
-  })
-
-  router.get('/review/edit/:transactionId/:field', (req, res) => {
-    const statements = req.session.data.case.statements
-
-    const statement = statements[statements.length - 1]
-
-    const transaction = statement.transactions.find(
-      transaction => transaction.id === req.params.transactionId
-    )
-
-    if (!transaction) {
-      return res.redirect('/review')
-    }
-
-    const allowedFields = [
-      'debit',
-      'credit',
-      'balance'
-    ]
-
-    const field = req.params.field
-
-    if (!allowedFields.includes(field)) {
-      return res.redirect('/review')
-    }
-
-    res.render('review/edit-field', {
-      transaction,
-      field,
-      value: transaction[field]
+      hasAuditRecords,
+      uploadedFileName
     })
   })
 
@@ -187,7 +162,21 @@ module.exports = function (router) {
   })
 
   router.get('/review/audit-history', (req, res) => {
-    const auditRecords = req.session.data.audit || []
+    const auditRecords = (req.session.data.audit || []).map(
+      record => ({
+        ...record,
+
+        formattedTimestamp: new Date(
+          record.timestamp
+        ).toLocaleString('en-GB', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })
+      })
+    )
 
     res.render('review/audit-history', {
       auditRecords
@@ -263,6 +252,12 @@ module.exports = function (router) {
 
     updateReviewStatus(statement)
 
+    req.session.data.hasReviewChanges = true
+
+    if (statement.reviewStatus === 'completed') {
+      return res.redirect('/statements/success')
+    }
+
     res.redirect('/review')
   })
 
@@ -289,10 +284,17 @@ module.exports = function (router) {
       reviewItem.id.replace('issue-', '')
     )
 
+    const uploadedFileName =
+      req.session.data.upload?.filename ||
+      (statement.bank
+        ? `${statement.bank.toLowerCase()}_statement.pdf`
+        : 'bank_statement.pdf')
+
     res.render('review/item', {
       reviewItem,
       reviewNumber,
-      transactions
+      transactions,
+      uploadedFileName
     })
   })
 
@@ -423,79 +425,85 @@ module.exports = function (router) {
   })
 
   router.post('/review/review-changes', (req, res) => {
-  const statements = req.session.data.case.statements
+    const statements = req.session.data.case.statements
 
-  const statement = statements[statements.length - 1]
+    const statement = statements[statements.length - 1]
 
-  const pendingTransactionChange =
-    req.session.data.pendingTransactionChange
+    const pendingTransactionChange =
+      req.session.data.pendingTransactionChange
 
-  if (!pendingTransactionChange) {
-    return res.redirect('/review')
-  }
+    if (!pendingTransactionChange) {
+      return res.redirect('/review')
+    }
 
-  const transaction = statement.transactions.find(
-    transaction =>
-      transaction.id === pendingTransactionChange.transactionId
-  )
+    const transaction = statement.transactions.find(
+      transaction =>
+        transaction.id === pendingTransactionChange.transactionId
+    )
 
-  if (!transaction) {
-    return res.redirect('/review')
-  }
+    if (!transaction) {
+      return res.redirect('/review')
+    }
 
-  const reason = req.body.reason?.trim()
+    const reason = req.body.reason?.trim()
 
-  if (!reason) {
-    return res.render('review/change', {
-      transaction,
-      pendingTransactionChange,
-      enteredReason: '',
-      errors: [
-        {
-          text: 'Enter a reason for the change',
-          href: '#reason'
-        }
-      ]
+    if (!reason) {
+      return res.render('review/change', {
+        transaction,
+        pendingTransactionChange,
+        enteredReason: '',
+        errors: [
+          {
+            text: 'Enter a reason for the change',
+            href: '#reason'
+          }
+        ]
+      })
+    }
+
+    transaction.debit =
+      pendingTransactionChange.updatedValues.debit
+
+    transaction.credit =
+      pendingTransactionChange.updatedValues.credit
+
+    transaction.balance =
+      pendingTransactionChange.updatedValues.balance
+
+    req.session.data.audit.push({
+      timestamp: new Date().toISOString(),
+      userId: req.session.data.user.id,
+      action: 'change',
+      transactionId: transaction.id,
+      originalValues:
+        pendingTransactionChange.originalValues,
+      updatedValues:
+        pendingTransactionChange.updatedValues,
+      reason
     })
-  }
 
-  transaction.debit =
-    pendingTransactionChange.updatedValues.debit
+    const reviewItem = statement.reviewItems.find(
+      item =>
+        item.transactionIds.includes(transaction.id)
+    )
 
-  transaction.credit =
-    pendingTransactionChange.updatedValues.credit
+    if (reviewItem) {
+      reviewItem.status = 'validated'
+    }
 
-  transaction.balance =
-    pendingTransactionChange.updatedValues.balance
+    updateReviewStatus(statement)
 
-  req.session.data.audit.push({
-    timestamp: new Date().toISOString(),
-    userId: req.session.data.user.id,
-    action: 'change',
-    transactionId: transaction.id,
-    originalValues:
-      pendingTransactionChange.originalValues,
-    updatedValues:
-      pendingTransactionChange.updatedValues,
-    reason
+    req.session.data.hasReviewChanges = true
+
+    if (statement.reviewStatus === 'completed') {
+      return res.redirect('/statements/success')
+    }
+
+    res.redirect('/review')
+
   })
 
-  const reviewItem = statement.reviewItems.find(
-    item =>
-      item.transactionIds.includes(transaction.id)
-  )
 
-  if (reviewItem) {
-    reviewItem.status = 'validated'
-  }
 
-  updateReviewStatus(statement)
-
-  delete req.session.data.pendingTransactionChange
-
-  res.redirect('/review')
-})
-
-  
 
 }

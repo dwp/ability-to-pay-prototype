@@ -5,7 +5,7 @@ Change transaction - ATP 4.2
 {% endblock %}
 
 {% block beforeContent %}
-<a href="/review" class="govuk-back-link">
+<a href="history.back()" class="govuk-back-link">
   Back
 </a>
 {% endblock %}
@@ -61,27 +61,26 @@ Change transaction - ATP 4.2
           {% if pendingTransactionChange.originalValues.debit !=
           pendingTransactionChange.updatedValues.debit %}
 
-            {% if pendingTransactionChange.originalValues.debit %}
-            <del>
-              £{{ pendingTransactionChange.originalValues.debit }}
-            </del>
-            {% else %}
-            &mdash;
-            {% endif %}
+          {% if pendingTransactionChange.originalValues.debit %}
+          <del>
+            £{{ pendingTransactionChange.originalValues.debit }}</del>
+          {% else %}
+          &mdash;
+          {% endif %}
 
-              {% if pendingTransactionChange.updatedValues.debit %}
-              <strong>£{{ pendingTransactionChange.updatedValues.debit }}</strong>
-              {% else %}
-              &mdash;
-              {% endif %}
+          {% if pendingTransactionChange.updatedValues.debit %}
+          <strong class="govuk-!-margin-left-1">£{{ pendingTransactionChange.updatedValues.debit }}</strong>
+          {% else %}
+          &mdash;
+          {% endif %}
 
-            {% else %}
+          {% else %}
 
-            {% if pendingTransactionChange.originalValues.debit %}
-            £{{ pendingTransactionChange.originalValues.debit }}
-            {% else %}
-            &mdash;
-            {% endif %}
+          {% if pendingTransactionChange.originalValues.debit %}
+          £{{ pendingTransactionChange.originalValues.debit }}
+          {% else %}
+          &mdash;
+          {% endif %}
 
           {% endif %}
 
@@ -104,29 +103,27 @@ Change transaction - ATP 4.2
           {% if pendingTransactionChange.originalValues.credit !=
           pendingTransactionChange.updatedValues.credit %}
 
-            {% if pendingTransactionChange.originalValues.credit %}
-            <del>
-              £{{ pendingTransactionChange.originalValues.credit }}
-            </del>
-            {% else %}
-            &mdash;
-            {% endif %}
+          {% if pendingTransactionChange.originalValues.credit %}
+          <del>
+            £{{ pendingTransactionChange.originalValues.credit }}</del>
+          {% else %}
+          &mdash;
+          {% endif %}
 
-            
-              {% if pendingTransactionChange.updatedValues.credit %}
-              <strong>£{{ pendingTransactionChange.updatedValues.credit }} </strong>
-              {% else %}
-              &mdash;
-              {% endif %}
-           
+          {% if pendingTransactionChange.updatedValues.credit %}
+          <strong class="govuk-!-margin-left-1">£{{ pendingTransactionChange.updatedValues.credit }}</strong>
+          {% else %}
+          &mdash;
+          {% endif %}
+
 
           {% else %}
 
-            {% if pendingTransactionChange.originalValues.credit %}
-              £{{ pendingTransactionChange.originalValues.credit }}
-            {% else %}
-              &mdash;
-            {% endif %}
+          {% if pendingTransactionChange.originalValues.credit %}
+          £{{ pendingTransactionChange.originalValues.credit }}
+          {% else %}
+          &mdash;
+          {% endif %}
 
           {% endif %}
 
@@ -150,27 +147,26 @@ Change transaction - ATP 4.2
           {% if pendingTransactionChange.originalValues.balance !=
           pendingTransactionChange.updatedValues.balance %}
 
-            {% if pendingTransactionChange.originalValues.balance %}
-            <del>
-              £{{ pendingTransactionChange.originalValues.balance }}
-            </del>
-            {% else %}
-            &mdash;
-            {% endif %}
+          {% if pendingTransactionChange.originalValues.balance %}
+          <del>
+            £{{ pendingTransactionChange.originalValues.balance }}</del>
+          {% else %}
+          &mdash;
+          {% endif %}
 
-            {% if pendingTransactionChange.updatedValues.balance %}
-            <strong>£{{ pendingTransactionChange.updatedValues.balance }}</strong>
-            {% else %}
-            &mdash;
-            {% endif %}
+          {% if pendingTransactionChange.updatedValues.balance %}
+          <strong class="govuk-!-margin-left-1">£{{ pendingTransactionChange.updatedValues.balance }}</strong>
+          {% else %}
+          &mdash;
+          {% endif %}
 
           {% else %}
 
-            {% if pendingTransactionChange.originalValues.balance %}
-            £{{ pendingTransactionChange.originalValues.balance }}
-            {% else %}
-            &mdash;
-            {% endif %}
+          {% if pendingTransactionChange.originalValues.balance %}
+          £{{ pendingTransactionChange.originalValues.balance }}
+          {% else %}
+          &mdash;
+          {% endif %}
 
           {% endif %}
 
@@ -184,6 +180,12 @@ Change transaction - ATP 4.2
       </div>
 
     </dl>
+
+        <p class="govuk-body">
+      <a class="govuk-link" href="/review/remove/{{ transaction.id }}">
+        Remove transaction
+      </a>
+    </p>
 
     <form method="post" action="/review/review-changes">
 
@@ -234,12 +236,6 @@ Change transaction - ATP 4.2
       {% endif %}
 
     </form>
-
-    <p class="govuk-body">
-      <a class="govuk-link" href="/review/remove/{{ transaction.id }}">
-        Remove transaction
-      </a>
-    </p>
 
   </div>
   {% endif %}

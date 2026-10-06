@@ -1,0 +1,59 @@
+{% extends "layouts/internal-service.html" %}
+
+{% block pageTitle %}
+Download audit history - ATP 4.2
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {% if errors %}
+
+    {{ govukErrorSummary({
+    titleText: "There is a problem",
+    errorList: [
+    {
+    text: "Download the audit history before downloading the reviewed data",
+    href: "#download-audit-history"
+    }
+    ]
+    }) }}
+
+    {% endif %}
+
+    <h1 class="govuk-heading-l">
+      Download documents
+    </h1>
+
+    <p class="govuk-body">
+      You must download the audit history before you can download the extracted data.
+    </p>
+
+
+    <div class="govuk-button-group">
+      <form method="post">
+        {{ govukButton({
+        text: "Download audit history",
+        name: "action",
+        id: "download-audit-history",
+        value: "audit-history"
+        }) }}
+      </form>
+      <form method="post">
+        {{ govukButton({
+        text: "Download extracted data",
+        classes: "govuk-button--secondary",
+        name: "action",
+        value: "reviewed-data"
+        }) }}
+      </form>
+
+    </div>
+
+
+  </div>
+</div>
+
+{% endblock %}

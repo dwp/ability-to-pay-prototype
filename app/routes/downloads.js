@@ -5,6 +5,14 @@ function escapeCsv(value) {
 module.exports = function (router) {
 
   router.get('/downloads/extracted-data', (req, res) => {
+
+    if (
+      req.session.data.hasReviewChanges &&
+      !req.session.data.auditHistoryDownloaded
+    ) {
+      return res.redirect('/downloads/audit-reminder')
+    }
+
     const statements = req.session.data.case.statements
 
     const statement = statements[statements.length - 1]
@@ -93,6 +101,50 @@ module.exports = function (router) {
       'attachment; filename="audit-history.csv"'
     )
 
+    req.session.data.auditHistoryDownloaded = true
+
     res.send(csv)
   })
+
+  // router.get('/downloads/audit-reminder', (req, res) => {
+  //   res.render('downloads/audit-reminder')
+  // })
+
+  //   router.get('/downloads/audit-downloaded', (req, res) => {
+  //   res.render('downloads/audit-downloaded')
+  // })
+
+  router.post('/downloads/audit-history-ready', (req, res) => {
+    const action = req.body.action
+
+    if (action === 'audit-history') {
+      return res.redirect('/downloads/audit-history')
+    }
+
+    if (
+      action === 'reviewed-data' &&
+      !req.session.data.auditHistoryDownloaded
+    ) {
+      req.session.data.showAuditDownloadError = true
+
+      return res.redirect('/statements/success')
+    }
+
+    if (action === 'reviewed-data') {
+      return res.redirect('/downloads/extracted-data')
+    }
+
+    res.redirect('/statements/success')
+  })
+
+  router.post('/downloads/reviewed-data', (req, res) => {
+    if (!req.session.data.auditHistoryDownloaded) {
+      return res.render('downloads/audit-history-ready', {
+        errors: true
+      })
+    }
+
+    return res.redirect('/downloads/extracted-data')
+  })
+
 }

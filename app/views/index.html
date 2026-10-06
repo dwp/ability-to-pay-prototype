@@ -7,16 +7,24 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <!-- {% include "govuk-prototype-kit/includes/homepage-top.njk" %} -->
+    {% if data.prototypeReset %}
 
+    {{ govukNotificationBanner({
+    titleText: "Success",
+    text: "Prototype has been reset."
+    }) }}
+
+    {% endif %}
+    
     <h1 class="govuk-heading-l govuk-!-margin-bottom-2">
       {{ serviceName }}
     </h1>
     <!-- <span class="govuk-caption-xl govuk-!-margin-bottom-6">Prototype v4.2 </span> -->
 
     <p class="govuk-!-margin-top-6">
-      
-      <a href="dashboard/index" role="button" draggable="false" class="govuk-button govuk-button--start" data-module="govuk-button">
+
+      <a href="dashboard/index" role="button" draggable="false" class="govuk-button govuk-button--start"
+        data-module="govuk-button">
         Start now
         <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19"
           viewBox="0 0 33 40" aria-hidden="true" focusable="false">
@@ -26,24 +34,31 @@
     </p>
 
     <div class="govuk-heading-s">Shortcuts</div>
-    <ul class="govuk-list govuk-list--bullet">
-<li>
-  <a class="govuk-link" href="upload">Upload a bank statement
-</a>
-</li><li>
-  <a class="govuk-link" href="/bank">Which bank statement are you uploading?</a>
-</li><li>
-  <a class="govuk-link" href="/statements/success">Extraction complete</a>
-</li>
-<li>
-  <a class="govuk-link" href="/review">Unreconciled transactions</a>
-</li>
-<li>
-  <a class="govuk-link" href="/review/item/issue-001">Review transaction 1</a>
-</li>
-<li>
-  <a class="govuk-link" href="/review/edit/txn-001">Change transaction data 1</a>
-</li>
+    <ul class="govuk-list govuk-list--bullet govuk-list--spaced">
+      <li>
+        <a class="govuk-link" href="upload">Upload a bank statement
+        </a>
+      </li>
+      <li>
+        <a class="govuk-link" href="/bank">Which bank statement are you uploading?</a>
+      </li>
+
+      <li>
+        <a class="govuk-link" href="/prototype/monzo-complete">
+          Monzo extracted data ready to download
+        </a>
+      </li>
+      <li>
+        <a class="govuk-link" href="/prototype/hsbc-complete">
+          HSBC extracted data ready to download
+        </a>
+      </li>
+
+      <li>
+        <a class="govuk-link" href="/prototype/reset">
+          Reset prototype</a>
+      </li>
+
 
 
     </ul>

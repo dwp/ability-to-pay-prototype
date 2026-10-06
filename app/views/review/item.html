@@ -5,7 +5,7 @@ Review item - ATP 4.2
 {% endblock %}
 
 {% block beforeContent %}
-<a href="/review" class="govuk-back-link">
+<a href="history.back()" class="govuk-back-link">
   Back
 </a>
 {% endblock %}
@@ -20,9 +20,9 @@ Review item - ATP 4.2
     </h1>
 
     <div class="govuk-inset-text">
-      <p>Look in {{ reviewItem.hint }}.</p>
-      <p>Check against original statement and make necessary corrections below.</p>
-    </div>
+      <p class="govuk-body">Look in <strong>{{ uploadedFileName }} &mdash; {{ reviewItem.hint }}</strong></div>
+    
+    <p>Check against original statement and make necessary corrections below.</p>
 
     <table class="govuk-table">
 

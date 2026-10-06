@@ -1,0 +1,38 @@
+{% extends "layouts/internal-service.html" %}
+
+{% block pageTitle %}
+Audit history downloaded - ATP 4.2
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <div class="govuk-panel govuk-panel--confirmation">
+      <h1 class="govuk-panel__title">
+        Audit history downloaded
+      </h1>
+
+      <div class="govuk-panel__body">
+        The audit trail has been saved
+      </div>
+    </div>
+
+    <h2 class="govuk-heading-m">
+      What next
+    </h2>
+
+    <p class="govuk-body">
+      You can now download the reviewed data.
+    </p>
+
+    {{ govukButton({
+      text: "Download reviewed data",
+      href: "/downloads/extracted-data"
+    }) }}
+
+  </div>
+</div>
+
+{% endblock %}

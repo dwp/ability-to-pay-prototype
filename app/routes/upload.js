@@ -4,6 +4,9 @@ module.exports = function (router) {
   })
 
   router.post('/upload', (req, res) => {
+
+    delete req.session.data.prototypeReset
+    
     req.session.data.upload ||= {}
 
     req.session.data.upload.filename =

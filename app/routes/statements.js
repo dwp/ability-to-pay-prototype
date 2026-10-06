@@ -26,6 +26,13 @@ module.exports = function (router) {
       req.session.data.case.statements = [statement]
     }
 
+    if (
+      statement?.reviewItems &&
+      statement.reviewItems.length > 0
+    ) {
+      return res.redirect('/review')
+    }
+
     res.redirect('/statements/success')
   })
 
@@ -46,23 +53,107 @@ module.exports = function (router) {
       item => item.status === 'validated'
     ).length
 
-    const lastAudit =
-      req.session.data.audit?.slice(-1)[0]
-
     const uploadedFileName =
       req.session.data.upload?.filename ||
       (statement.bank
         ? `${statement.bank.toLowerCase()}_statement.pdf`
         : 'bank_statement.pdf')
 
+    const showAuditDownloadError =
+      req.session.data.showAuditDownloadError
+
+    delete req.session.data.showAuditDownloadError
+
     res.render('statements/success', {
       statement,
       reviewItems,
       hasReviewItems,
       reviewedCount,
-      lastAudit,
-      uploadedFileName
+      uploadedFileName,
+      showAuditDownloadError
     })
   })
+
+  const {
+    createMockStatement
+  } = require('../data/services/statement-service')
+
+  router.get('/prototype/monzo-complete', (req, res) => {
+    const statement = createMockStatement('Monzo')
+
+    req.session.data.case.statements = [statement]
+
+    req.session.data.upload = {
+      filename: 'monzo_statement.pdf'
+    }
+
+    req.session.data.audit = []
+
+    req.session.data.hasReviewChanges = false
+
+    req.session.data.auditHistoryDownloaded = false
+
+    res.redirect('/statements/success')
+  })
+
+  router.get('/prototype/hsbc-complete', (req, res) => {
+    const statement = createMockStatement('HSBC')
+
+    statement.reviewItems.forEach(item => {
+      item.status = 'validated'
+    })
+
+    statement.reviewStatus = 'completed'
+
+    req.session.data.case.statements = [statement]
+
+    req.session.data.upload = {
+      filename: 'hsbc_statement.pdf'
+    }
+
+    req.session.data.audit = [
+      {
+        timestamp: new Date().toISOString(),
+        userId: req.session.data.user?.id || 'ECM12345',
+        action: 'change',
+        transactionId: 'txn-001',
+        originalValues: {
+          debit: '71.00',
+          credit: '',
+          balance: '4749.25'
+        },
+        updatedValues: {
+          debit: '80.00',
+          credit: '',
+          balance: '4758.25'
+        },
+        reason: 'Prototype review correction'
+      }
+    ]
+
+    req.session.data.hasReviewChanges = true
+
+    req.session.data.auditHistoryDownloaded = false
+
+    res.redirect('/statements/success')
+  })
+
+  router.get('/prototype/reset', (req, res) => {
+    req.session.data = {
+      prototypeReset: true,
+      case: {
+        statements: []
+      },
+      audit: [],
+      upload: null,
+      selectedBank: null,
+      hasReviewChanges: false,
+      auditHistoryDownloaded: false,
+      showAuditDownloadError: false
+    }
+
+    res.redirect('/')
+  })
+
 
 }
