@@ -91,20 +91,8 @@ Statement extracted - ATP 4.2
         </dd>
       </div>
 
-      {% if hasReviewItems %}
 
-      {% if statement.reviewStatus != 'completed' %}
-
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Flagged for review
-        </dt>
-        <dd class="govuk-summary-list__value">
-          {{ reviewItems.length }} unreconciled transaction{% if reviewItems.length != 1 %}s{% endif %}
-        </dd>
-      </div>
-
-      {% endif %}
+      {% if statement.reviewStatus == 'completed' and hasReviewItems %}
 
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
@@ -117,34 +105,42 @@ Statement extracted - ATP 4.2
 
       {% endif %}
 
-  <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">
-      Transactions reviewed
-    </dt>
-    <dd class="govuk-summary-list__value">
-      {{ reviewedCount }} of {{ reviewItems.length }}
-    </dd>
-  </div>
+    </dl>
 
-  <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">
-      Last review action
-    </dt>
-    <dd class="govuk-summary-list__value">
-      {% if lastAudit %}
-        {{ lastAudit.action }}
-      {% else %}
-        None
-      {% endif %}
-    </dd>
-  </div>
+    {% if statement.reviewStatus == 'completed' and hasReviewItems %}
 
-  {% endif %}
+    <h2 class="govuk-heading-m govuk-!-margin-top-8">
+      What next
+    </h2>
 
-</dl>
+    <p class="govuk-body">
+      You must download the audit history before you can download the extracted data.
+    </p>
+
+    <div class="govuk-button-group">
+      <form method="post" action="/downloads/audit-history-ready">
+        {{ govukButton({
+        text: "Download audit history",
+        name: "action",
+        value: "audit-history",
+        attributes: {
+        id: "download-audit-history"
+        }
+        }) }}
+      </form>
+      <form method="post" action="/downloads/audit-history-ready">
+        {{ govukButton({
+        text: "Download extracted data",
+        classes: "govuk-button--secondary",
+        name: "action",
+        value: "reviewed-data"
+        }) }}
+      </form>
+
+    </div>
 
 
-    {% if hasReviewItems %}
+    {% elif hasReviewItems %}
 
 
     {% if statement.reviewStatus == 'completed' and hasReviewItems %}
@@ -197,10 +193,9 @@ Statement extracted - ATP 4.2
     {% endif %}
 
     <p class="govuk-body">
-  <a
-    class="govuk-link govuk-link--no-visited-state"
-    href="/upload">
-    Choose another file</a></p>
+      <a class="govuk-link govuk-link--no-visited-state" href="/upload">
+        Choose another file</a>
+    </p>
 
 
   </div>
