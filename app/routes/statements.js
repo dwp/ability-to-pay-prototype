@@ -139,6 +139,9 @@ module.exports = function (router) {
   })
 
   router.get('/prototype/reset', (req, res) => {
+
+    const user = req.session.data.user
+    
     req.session.data = {
       prototypeReset: true,
       case: {

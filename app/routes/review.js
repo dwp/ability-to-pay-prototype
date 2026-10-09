@@ -234,7 +234,7 @@ module.exports = function (router) {
 
     req.session.data.audit.push({
       timestamp: new Date().toISOString(),
-      userId: req.session.data.user.id,
+      userId: req.session.data.user?.id || 'ECM12345',
       action: 'remove',
       transactionId: transaction.id,
       amount: transaction.amount,
@@ -472,7 +472,7 @@ module.exports = function (router) {
 
     req.session.data.audit.push({
       timestamp: new Date().toISOString(),
-      userId: req.session.data.user.id,
+      userId: req.session.data.user?.id || 'ECM12345',
       action: 'change',
       transactionId: transaction.id,
       originalValues:
