@@ -15,10 +15,10 @@ Remove transaction - ATP 4.2
 
     {% if errors %}
 
-      {{ govukErrorSummary({
-        titleText: "There is a problem",
-        errorList: errors
-      }) }}
+    {{ govukErrorSummary({
+    titleText: "There is a problem",
+    errorList: errors
+    }) }}
 
     {% endif %}
 
@@ -29,7 +29,8 @@ Remove transaction - ATP 4.2
       </h1>
 
       <p class="govuk-body">
-        {{ transaction.description }}
+        {{ transactionType | title }} transaction on {{ transaction.date }}
+        for {{ transaction.description }} of £{{ transactionAmount }}.
       </p>
 
       <p class="govuk-body">
@@ -41,18 +42,11 @@ Remove transaction - ATP 4.2
           Reason for removal
         </label>
 
-        <textarea
-          class="govuk-textarea"
-          id="reason"
-          name="reason"
-          rows="5">{{ enteredReason }}</textarea>
+        <textarea class="govuk-textarea" id="reason" name="reason" rows="5">{{ enteredReason }}</textarea>
 
       </div>
 
-      <button
-        type="submit"
-        class="govuk-button"
-        data-module="govuk-button">
+      <button type="submit" class="govuk-button" data-module="govuk-button">
 
         Confirm removal
 

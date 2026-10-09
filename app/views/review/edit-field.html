@@ -32,19 +32,19 @@ Change {{ field }} amount
 
             <p class="govuk-body">
                 You are changing the {{ field }} amount for
-                <strong>{{ transaction.description }}</strong>
+                {{ transaction.description }}
                 on
-                <strong>{{ transaction.date }}</strong>.
+                {{ transaction.date }}.
             </p>
             <p class="govuk-body">
-                Current {{ field }} amount:
+                Current {{ field }} amount is
                 <strong>£{{ value }}</strong>
             </p>
 
             <div class="govuk-form-group">
 
                 <label class="govuk-label" for="value">
-                    Enter new amount
+                    Edit amount
                 </label>
 
                 <div class="govuk-input__wrapper">

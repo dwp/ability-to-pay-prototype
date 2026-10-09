@@ -196,8 +196,21 @@ module.exports = function (router) {
       return res.redirect('/review')
     }
 
+    let transactionType = 'unknown'
+    let transactionAmount = '—'
+
+    if (transaction.debit) {
+      transactionType = 'debit'
+      transactionAmount = transaction.debit
+    } else if (transaction.credit) {
+      transactionType = 'credit'
+      transactionAmount = transaction.credit
+    }
+
     res.render('review/remove', {
-      transaction
+      transaction,
+      transactionType,
+      transactionAmount
     })
   })
 
