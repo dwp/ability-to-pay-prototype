@@ -1,6 +1,6 @@
 module.exports = {
   id: 'stmt-001',
-  bank: 'HSBC',
+  bank: 'Barclays',
   status: 'extracted',
   pageCount: 11,
   transactionCount: 213,

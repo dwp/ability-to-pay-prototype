@@ -1,0 +1,112 @@
+{% extends "layouts/internal-service.html" %}
+
+{% block pageTitle %}
+Add missing transaction
+{% endblock %}
+
+{% block beforeContent %}
+<a onclick="history.back()" class="govuk-back-link">
+  Back
+</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {% if errors %}
+
+{{ govukErrorSummary({
+  titleText: "There is a problem",
+  errorList: errors
+}) }}
+
+{% endif %}
+
+
+    <h1 class="govuk-heading-l">
+      Add missing transaction
+    </h1>
+
+    <p class="govuk-body">
+      Add the transaction that is present in the PDF but missing from the extracted data.
+    </p>
+
+    <form method="post">
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="date">
+          Date
+        </label>
+
+        <input
+  class="govuk-input"
+  id="date"
+  name="date"
+  type="text"
+  value="{{ enteredDate }}">
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="description">
+          Description
+        </label>
+
+       <input
+  class="govuk-input"
+  id="description"
+  name="description"
+  type="text"
+  value="{{ enteredDescription }}">
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="debit">
+          Debit
+        </label>
+
+        <input
+          class="govuk-input govuk-input--width-10"
+          id="debit"
+          name="debit"
+          type="text"
+          value="{{ enteredDebit }}">
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="credit">
+          Credit
+        </label>
+
+        <input
+          class="govuk-input govuk-input--width-10"
+          id="credit"
+          name="credit"
+          type="text"
+          value="{{ enteredCredit }}">
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="balance">
+          Balance
+        </label>
+
+        <input
+          class="govuk-input govuk-input--width-10"
+          id="balance"
+          name="balance"
+          type="text"
+          value="{{ enteredBalance }}">
+      </div>
+
+      {{ govukButton({
+        text: "Add transaction"
+      }) }}
+
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

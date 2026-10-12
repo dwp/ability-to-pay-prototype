@@ -78,13 +78,13 @@ module.exports = function (router) {
     createMockStatement
   } = require('../data/services/statement-service')
 
-  router.get('/prototype/monzo-complete', (req, res) => {
-    const statement = createMockStatement('Monzo')
+  router.get('/prototype/revolut-complete', (req, res) => {
+    const statement = createMockStatement('Revolut')
 
     req.session.data.case.statements = [statement]
 
     req.session.data.upload = {
-      filename: 'monzo_statement.pdf'
+      filename: 'revolut_statement.pdf'
     }
 
     req.session.data.audit = []
@@ -96,8 +96,8 @@ module.exports = function (router) {
     res.redirect('/statements/success')
   })
 
-  router.get('/prototype/hsbc-complete', (req, res) => {
-    const statement = createMockStatement('HSBC')
+  router.get('/prototype/barclays-complete', (req, res) => {
+    const statement = createMockStatement('Barclays')
 
     statement.reviewItems.forEach(item => {
       item.status = 'validated'
@@ -108,7 +108,7 @@ module.exports = function (router) {
     req.session.data.case.statements = [statement]
 
     req.session.data.upload = {
-      filename: 'hsbc_statement.pdf'
+      filename: 'barclays_statement.pdf'
     }
 
     req.session.data.audit = [

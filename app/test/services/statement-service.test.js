@@ -3,9 +3,9 @@ const {
 } = require('../../app/data/services/statement-service')
 
 describe('createMockStatement', () => {
-  test('returns HSBC fixture', () => {
-    const statement = createMockStatement('HSBC')
+  test('returns Barclays fixture', () => {
+    const statement = createMockStatement('Barclays')
 
-    expect(statement.bank).toBe('HSBC')
+    expect(statement.bank).toBe('Barclays')
   })
 })

@@ -26,7 +26,11 @@ Change transaction - ATP 4.2
 
 
     <h1 class="govuk-heading-l">
+      {% if pendingTransactionChange.mode == 'add' %}
+      Add missing transaction
+      {% else %}
       Change transaction data
+      {% endif %}
     </h1>
 
     <dl class="govuk-summary-list">
@@ -181,10 +185,16 @@ Change transaction - ATP 4.2
 
     </dl>
 
-        <p class="govuk-body">
+    <p class="govuk-body">
+      {% if pendingTransactionChange.mode == 'add' %}
+      <a class="govuk-link" href="/review/cancel-addition">
+        Cancel addition
+      </a>
+      {% else %}
       <a class="govuk-link" href="/review/remove/{{ transaction.id }}">
         Remove transaction
       </a>
+      {% endif %}
     </p>
 
     <form method="post" action="/review/review-changes">

@@ -144,13 +144,25 @@ module.exports = function (router) {
       return res.redirect('/review')
     }
 
-    const transaction = statement.transactions.find(
-      transaction =>
-        transaction.id === pendingTransactionChange.transactionId
-    )
+    let transaction
 
-    if (!transaction) {
-      return res.redirect('/review')
+    if (pendingTransactionChange.mode === 'add') {
+      transaction = {
+        date: pendingTransactionChange.date,
+        description: pendingTransactionChange.description,
+        debit: '',
+        credit: '',
+        balance: ''
+      }
+    } else {
+      transaction = statement.transactions.find(
+        transaction =>
+          transaction.id === pendingTransactionChange.transactionId
+      )
+
+      if (!transaction) {
+        return res.redirect('/review')
+      }
     }
 
     res.render('review/change', {
@@ -449,20 +461,10 @@ module.exports = function (router) {
       return res.redirect('/review')
     }
 
-    const transaction = statement.transactions.find(
-      transaction =>
-        transaction.id === pendingTransactionChange.transactionId
-    )
-
-    if (!transaction) {
-      return res.redirect('/review')
-    }
-
     const reason = req.body.reason?.trim()
 
     if (!reason) {
       return res.render('review/change', {
-        transaction,
         pendingTransactionChange,
         enteredReason: '',
         errors: [
@@ -474,49 +476,147 @@ module.exports = function (router) {
       })
     }
 
-    transaction.debit =
-      pendingTransactionChange.updatedValues.debit
+    if (pendingTransactionChange.mode === 'add') {
+      const transaction = {
+        id: `txn-${Date.now()}`,
 
-    transaction.credit =
-      pendingTransactionChange.updatedValues.credit
+        date: pendingTransactionChange.date,
 
-    transaction.balance =
-      pendingTransactionChange.updatedValues.balance
+        description:
+          pendingTransactionChange.description,
 
-    req.session.data.audit.push({
-      timestamp: new Date().toISOString(),
-      userId: req.session.data.user?.id || 'ECM12345',
-      action: 'change',
-      transactionId: transaction.id,
-      originalValues:
-        pendingTransactionChange.originalValues,
-      updatedValues:
-        pendingTransactionChange.updatedValues,
-      reason
-    })
+        debit:
+          pendingTransactionChange.updatedValues.debit,
 
-    const reviewItem = statement.reviewItems.find(
-      item =>
-        item.transactionIds.includes(transaction.id)
-    )
+        credit:
+          pendingTransactionChange.updatedValues.credit,
 
-    if (reviewItem) {
-      reviewItem.status = 'validated'
+        balance:
+          pendingTransactionChange.updatedValues.balance
+      }
+
+      statement.transactions.push(transaction)
+
+      req.session.data.audit.push({
+        timestamp: new Date().toISOString(),
+        userId:
+          req.session.data.user?.id || 'ECM12345',
+        action: 'add',
+        transactionId: transaction.id,
+        values: {
+          debit: transaction.debit,
+          credit: transaction.credit,
+          balance: transaction.balance
+        },
+        reason
+      })
+
+      const reviewItem = statement.reviewItems.find(
+        item =>
+          item.id ===
+          pendingTransactionChange.reviewItemId
+      )
+
+      if (reviewItem) {
+        reviewItem.status = 'validated'
+      }
+
+      updateReviewStatus(statement)
+
+      req.session.data.hasReviewChanges = true
+
+      delete req.session.data.pendingTransactionChange
+
+      if (statement.reviewStatus === 'completed') {
+        return res.redirect('/statements/success')
+      }
+
+      return res.redirect('/review')
     }
 
-    updateReviewStatus(statement)
-
-    req.session.data.hasReviewChanges = true
-
-    if (statement.reviewStatus === 'completed') {
-      return res.redirect('/statements/success')
-    }
-
-    res.redirect('/review')
-
+    return res.redirect('/review')
   })
 
+  router.get('/review/add-transaction/:reviewItemId', (req, res) => {
+    res.render('review/add-transaction', {
+      reviewItemId: req.params.reviewItemId
+    })
+  })
 
+  router.post('/review/add-transaction/:reviewItemId', (req, res) => {
+    const date = req.body.date?.trim()
+    const description = req.body.description?.trim()
+    const debit = req.body.debit?.trim()
+    const credit = req.body.credit?.trim()
+    const balance = req.body.balance?.trim()
+
+    const errors = []
+
+    if (!date) {
+      errors.push({
+        text: 'Enter a transaction date',
+        href: '#date'
+      })
+    }
+
+    if (!description) {
+      errors.push({
+        text: 'Enter a transaction description',
+        href: '#description'
+      })
+    }
+
+    if (!debit && !credit) {
+      errors.push({
+        text: 'Enter either a debit or credit amount',
+        href: '#debit'
+      })
+    }
+
+    if (errors.length) {
+      return res.render('review/add-transaction', {
+        reviewItemId: req.params.reviewItemId,
+        errors,
+
+        enteredDate: date,
+        enteredDescription: description,
+        enteredDebit: debit,
+        enteredCredit: credit,
+        enteredBalance: balance
+      })
+    }
+
+    req.session.data.pendingTransactionChange = {
+      mode: 'add',
+
+      reviewItemId: req.params.reviewItemId,
+
+      transactionId: null,
+
+      originalValues: {
+        debit: '',
+        credit: '',
+        balance: ''
+      },
+
+      updatedValues: {
+        debit,
+        credit,
+        balance
+      },
+
+      date,
+      description
+    }
+
+    res.redirect('/review/edit')
+  })
+
+  router.get('/review/cancel-addition', (req, res) => {
+    delete req.session.data.pendingTransactionChange
+
+    res.redirect('/review')
+  })
 
 
 }
